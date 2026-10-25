@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.local
+tools/.env
+tools/__pycache__
+*.mp4
+*.mov
+next-env.d.ts
