@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Star,
   MapPin,
-  Clock,
   ExternalLink,
   ChevronRight,
   Video,
@@ -46,7 +45,7 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
   const [slug, setSlug] = useState<string>('demo-rag');
   const [pitch, setPitch] = useState<PitchData | null>(null);
 
-  // Fases del reproductor: 'idle' = captura de pantalla fija; 'intro' = captura + esfera en la esquina; 'main' = video portafolio full
+  // Fases del reproductor Loom: 'idle' = captura fija; 'intro' = captura + esfera en esquina; 'main' = video portafolio full
   const [phase, setPhase] = useState<PlayerPhase>('idle');
   
   // Controles Video 2 (Main)
@@ -70,41 +69,27 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
     Promise.resolve(params).then((p) => {
       const currentSlug = p?.slug || 'demo-rag';
       setSlug(currentSlug);
-      fetchPitchFromSupabase(currentSlug);
+      fetchPitchData(currentSlug);
     });
   }, [params]);
 
-  const fetchPitchFromSupabase = async (targetSlug: string) => {
+  const fetchPitchData = async (targetSlug: string) => {
     try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://temdvwaqgwgloduygwxj.supabase.co';
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-      const res = await fetch(`${supabaseUrl}/rest/v1/pitches?slug=eq.${targetSlug}&select=*`, {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`
-        }
-      });
-
+      // Consulta a nuestra API Route interna para no exponer credenciales
+      const res = await fetch(`/api/pitch/${targetSlug}`);
       if (res.ok) {
         const data = await res.json();
-        if (data && data.length > 0) setPitch(data[0]);
+        if (data) setPitch(data);
       }
     } catch (err) {
-      console.error('Error fetching pitch:', err);
+      console.error('Error cargando pitch:', err);
     }
   };
 
-  // URLs de Supabase / Fallbacks
+  // Asignación de datos desde Supabase / Fallbacks
   const cardImageUrl = pitch?.card_image_url || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop';
-  
-  const introVideoUrl = pitch?.intro_video_url 
-    || process.env.NEXT_PUBLIC_DEFAULT_INTRO_VIDEO 
-    || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
-
-  const mainVideoUrl = pitch?.main_video_url 
-    || process.env.NEXT_PUBLIC_DEFAULT_MAIN_VIDEO 
-    || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  const introVideoUrl = pitch?.intro_video_url || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+  const mainVideoUrl = pitch?.main_video_url || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
   const jobTitle = pitch?.job_title || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   const jobSummary = pitch?.job_summary || 'Te presento la propuesta técnica e implementación en vivo para tu requerimiento.';
@@ -119,7 +104,7 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
     }
   }
 
-  // Transiciones del Loom Player
+  // Transiciones del reproductor Loom
   const handleStartPitch = () => {
     setPhase('intro');
     setTimeout(() => {
@@ -269,7 +254,7 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
           </div>
         </section>
 
-        {/* REPRODUCTOR PRINCIPAL TIPO LOOM (MASTEHEAD HERO DE LA PÁGINA) */}
+        {/* REPRODUCTOR LOOM PRINCIPAL (HERO DE LA PÁGINA) */}
         <section className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e4ebe4] shadow-md space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -283,7 +268,6 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
             </span>
           </div>
 
-          {/* MARCO DEL REPRODUCTOR PRINCIPAL */}
           <div className="relative aspect-video w-full bg-[#001e00] rounded-xl overflow-hidden shadow-xl border border-[#e4ebe4]">
             
             {/* 1. VISTA DE CAPTURA DE SUPABASE (Fases 'idle' e 'intro') */}
@@ -295,7 +279,6 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
                   className="w-full h-full object-cover"
                 />
 
-                {/* Overlay inicial para comenzar el Loom */}
                 {phase === 'idle' && (
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4">
                     <button
@@ -306,12 +289,12 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
                       Reproducir Propuesta Loom (~1 min)
                     </button>
                     <p className="mt-3 text-xs sm:text-sm text-white/90 font-medium drop-shadow-md">
-                      Muestra tu captura de pantalla con el video intro de Henry en pantalla
+                      Muestra tu captura de pantalla con el video intro de Henry sobre el video
                     </p>
                   </div>
                 )}
 
-                {/* 2. ESFERA BUBBLE DENTRO DEL VIDEO (Fase 'intro') */}
+                {/* 2. ESFERA BUBBLE DENTRO DEL REPRODUCTOR (Fase 'intro') */}
                 {phase === 'intro' && (
                   <div className="absolute bottom-4 right-4 z-20 flex flex-col items-end gap-2 animate-scaleUp">
                     <div className="relative w-36 h-36 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-[#14a800] shadow-2xl bg-black">
@@ -326,7 +309,6 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
                         <source src={introVideoUrl} type="video/mp4" />
                       </video>
 
-                      {/* Control Mute en la bola */}
                       <button
                         onClick={() => setIntroMuted(!introMuted)}
                         className="absolute bottom-2 right-2 p-1.5 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
@@ -369,7 +351,6 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
                   </div>
                 )}
 
-                {/* Controles de reproducción */}
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity space-y-2">
                   <div className="w-full h-1.5 bg-white/30 rounded-full cursor-pointer">
                     <div 
@@ -432,7 +413,7 @@ export default function ProposalSlugPage({ params }: { params: Promise<{ slug: s
           </div>
         </section>
 
-        {/* SECCIÓN INFERIOR: PLAN DE ACCIÓN Y CONTACTO */}
+        {/* SECCIÓN INFERIOR */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-[#e4ebe4] shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e4ebe4] pb-4">
