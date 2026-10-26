@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Sube tus dos videos a Supabase Storage y te imprime las variables para Vercel.
 
+    python upload_videos.py --combined combined.mp4      (recomendado: un solo video)
     python upload_videos.py --intro intro.mp4 --main main.mp4
 
-Puedes subir solo uno (--intro o --main). Cada subida usa un nombre nuevo con marca de tiempo,
+Puedes subir solo uno (--intro, --main o --combined). Cada subida usa un nombre nuevo con marca de tiempo,
 así el navegador del cliente nunca ve una versión vieja en caché.
 """
 import argparse
@@ -47,15 +48,20 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Sube los videos a Supabase Storage.")
     p.add_argument("--intro", type=Path, help="Intro corto (6-8 s)")
     p.add_argument("--main", type=Path, help="Video principal (60-90 s)")
+    p.add_argument("--combined", type=Path, help="Intro + principal pegados (make_combined.py)")
     args = p.parse_args()
-    if not args.intro and not args.main:
-        p.error("Pasa al menos --intro o --main")
+    if not (args.intro or args.main or args.combined):
+        p.error("Pasa al menos --intro, --main o --combined")
 
     lines = []
     if args.intro:
         lines.append(f"INTRO_VIDEO_URL={upload(args.intro, 'intro')}")
     if args.main:
         lines.append(f"MAIN_VIDEO_URL={upload(args.main, 'main')}")
+
+    if args.combined:
+        lines.append(f"COMBINED_VIDEO_URL={upload(args.combined, 'combined')}")
+        lines.append("INTRO_SECONDS=<el número que imprimió make_combined.py>")
 
     print("\nPega esto en Vercel -> Settings -> Environment Variables (y en .env.local si pruebas en local),")
     print("luego haz Redeploy:\n")

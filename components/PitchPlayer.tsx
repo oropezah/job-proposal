@@ -96,16 +96,14 @@ function CombinedStage({
     <div className="stage" data-phase={mode}>
       <div className="stage-card">{children}</div>
 
-      {!started && (
-        <div className="stage-overlay">
-          <button type="button" className="play" onClick={start}>
-            <span className="play-icon" aria-hidden="true">
-              ▶
-            </span>
-            Watch (about 1 min)
-          </button>
-        </div>
-      )}
+      <div className={`stage-overlay${started ? " gone" : ""}`} aria-hidden={started}>
+        <button type="button" className="play" onClick={start} tabIndex={started ? -1 : 0} disabled={started}>
+          <span className="play-icon" aria-hidden="true">
+            ▶
+          </span>
+          Watch (about 1 min)
+        </button>
+      </div>
 
       <video
         ref={ref}
@@ -179,10 +177,16 @@ function TwoFileStage({
     <div className="stage" data-phase={phase}>
       {phase !== "main" && <div className="stage-card">{children}</div>}
 
-      {phase === "idle" && (
-        <div className="stage-overlay">
+      {(phase === "idle" || hasVideo) && (
+        <div className={`stage-overlay${phase !== "idle" ? " gone" : ""}`} aria-hidden={phase !== "idle"}>
           {hasVideo ? (
-            <button type="button" className="play" onClick={start}>
+            <button
+              type="button"
+              className="play"
+              onClick={start}
+              tabIndex={phase !== "idle" ? -1 : 0}
+              disabled={phase !== "idle"}
+            >
               <span className="play-icon" aria-hidden="true">
                 ▶
               </span>

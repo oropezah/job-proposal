@@ -77,3 +77,15 @@ El último comando imprime `INTRO_VIDEO_URL=...` y `MAIN_VIDEO_URL=...`. Pégala
 - No pongas email ni teléfono en la página: Upwork penaliza sacar el contacto de la plataforma.
 - Si algún día subes una captura auténtica de un job, pásala con `--card-image-url` y la página la usa en vez de la tarjeta.
 - Edita `data/portfolio.ts` para cambiar o agregar proyectos y sus palabras clave.
+
+## Video continuo (recomendado)
+```bash
+python make_combined.py intro_raw.mp4 main_raw.mp4 combined.mp4   # imprime INTRO_SECONDS
+python upload_videos.py --combined combined.mp4                    # imprime COMBINED_VIDEO_URL
+```
+En Vercel agrega `COMBINED_VIDEO_URL` e `INTRO_SECONDS` y haz Redeploy. Con esas dos variables la página usa
+un solo video (círculo a la derecha durante el intro y pantalla completa después). Sin ellas usa
+`INTRO_VIDEO_URL` + `MAIN_VIDEO_URL`, precargando el principal mientras suena el intro.
+
+Variables opcionales: `AVATAR_URL` (tu foto en la barra superior) y `UPWORK_PROFILE_URL` (botón "View my Upwork profile").
+Capturas de tus proyectos: carpeta `public/work/` (ver LEEME.txt ahí).

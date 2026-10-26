@@ -8,7 +8,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // La clase "js" permite ocultar los elementos que aparecen al hacer scroll solo cuando hay JavaScript.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>{children}</body>
     </html>
   );

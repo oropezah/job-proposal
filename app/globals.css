@@ -1,53 +1,703 @@
-@import "tailwindcss";
-
 :root {
-  --bg: #f8faf9;
+  --bg: #f6f8f6;
   --surface: #ffffff;
-  --ink: #001e00;          /* Verde oscuro de Upwork */
-  --muted: #5e6d55;
-  --line: #e4ebe4;
-  --accent: #14a800;       /* Verde principal Upwork */
-  --accent-hover: #138b00;
-  --accent-ink: #108000;
-  --accent-soft: #f2f7f2;
+  --ink: #12201a;
+  --muted: #5a6b61;
+  --line: #dde5df;
+  --accent: #1f9d3a;
+  --accent-hover: #188530;
+  --accent-ink: #147a2b;
+  --accent-soft: #e8f5eb;
   --chip: #eef2ef;
   --radius: 16px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --shadow: 0 1px 2px rgba(18, 32, 26, 0.05), 0 8px 28px rgba(18, 32, 26, 0.08);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b110d;
+    --surface: #131b15;
+    --ink: #e8f1ea;
+    --muted: #97a99d;
+    --line: #243127;
+    --accent: #3dbb58;
+    --accent-hover: #55cc6f;
+    --accent-ink: #7ddb92;
+    --accent-soft: #14281a;
+    --chip: #1a241d;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
-  background-color: var(--bg);
+  margin: 0;
+  background: var(--bg);
   color: var(--ink);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
 }
 
-/* Animaciones personalizadas */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* ---------- barra superior ---------- */
+.bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.bar-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+.avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.bar-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+.brand {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.brand-sub {
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bar-badge {
+  margin-left: auto;
+  flex: none;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+@media (max-width: 520px) {
+  .bar-badge {
+    display: none;
   }
 }
 
-@keyframes scaleUp {
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 16px 56px;
+}
+.wrap.narrow {
+  padding-top: 15vh;
+}
+
+.hero {
+  margin-bottom: 20px;
+}
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.55rem, 4.4vw, 2.3rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+.h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+}
+.lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 62ch;
+}
+.muted {
+  color: var(--muted);
+  margin: 0;
+}
+.section {
+  margin-top: 44px;
+}
+.section-sub {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+/* ---------- escenario del video ---------- */
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+@media (max-width: 560px) {
+  .stage {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.stage-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 4vw, 40px);
+  background: var(--bg);
+}
+.stage-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 32, 26, 0.3);
+}
+
+.play,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.play {
+  box-shadow: 0 8px 24px rgba(31, 157, 58, 0.4);
+}
+.play:hover,
+.btn:hover {
+  background: var(--accent-hover);
+}
+.play:active,
+.btn:active {
+  transform: scale(0.97);
+}
+.play-icon {
+  font-size: 0.85rem;
+}
+
+/* intro en picture-in-picture, abajo a la DERECHA */
+.pip {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: clamp(120px, 24%, 210px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--accent);
+  background: #000;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  animation: pip-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.pip video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.skip {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+@keyframes pip-in {
   from {
+    transform: scale(0.85);
     opacity: 0;
-    transform: scale(0.92);
   }
   to {
-    opacity: 1;
     transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 200ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+.main-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
 }
 
-.animate-scaleUp {
-  animation: scaleUp 200ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+/* modo de un solo video: el mismo <video> es círculo en el intro y pantalla completa después */
+.solo {
+  position: absolute;
+  background: #000;
+}
+.solo.intro {
+  right: 16px;
+  bottom: 16px;
+  width: clamp(120px, 24%, 210px);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  object-fit: cover;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.solo.main,
+.solo.idle {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: 0;
+  object-fit: contain;
+}
+.solo.main {
+  animation: fade-in 0.25s ease;
+}
+
+/* ---------- tarjeta del job (diseño propio) ---------- */
+.jobcard {
+  width: 100%;
+  max-width: 660px;
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.jobcard-label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.jobcard-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+  line-height: 1.25;
+}
+.jobcard-summary {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: clamp(0.85rem, 2vw, 0.98rem);
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.jobcard-budget {
+  margin: 0 0 14px;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.jobcard-k {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+.jobcard-skills-h {
+  margin: 0 0 8px;
+}
+.card-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--chip);
+  font-size: 0.78rem;
+  font-weight: 550;
+}
+.chip-soft {
+  color: var(--muted);
+}
+
+/* ---------- confianza ---------- */
+.trust {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.trust li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+.trust strong {
+  color: var(--accent-ink);
+}
+.trust span {
+  color: var(--muted);
+}
+
+/* ---------- portfolio ---------- */
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.work-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  background: var(--chip);
+  border-bottom: 1px solid var(--line);
+}
+.work-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+  background: linear-gradient(135deg, var(--accent-soft), var(--chip));
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.project-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 18px;
+}
+.project-title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.project-blurb {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.project-link {
+  margin-top: auto;
+  padding-top: 14px;
+  color: var(--accent-ink);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.project-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- siguiente paso ---------- */
+.cta {
+  margin-top: 44px;
+  padding: clamp(20px, 4vw, 32px);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+}
+.cta-title {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+}
+.cta-text {
+  margin: 0 0 16px;
+  color: var(--muted);
+  max-width: 60ch;
+}
+.cta-hint {
+  margin: 0;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.foot {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* =====================================================================
+   Capa de movimiento y pulido
+   Reglas: solo transform + opacity, curvas fuertes, UI < 300 ms,
+   entradas lentas / salidas rápidas, nada se mueve mientras lees datos.
+   ===================================================================== */
+
+/* Barra superior: material translúcido, el contenido pasa por debajo */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+}
+
+/* Tipografía: tracking según tamaño (grande = más apretado) */
+.h1 {
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+.h2 {
+  letter-spacing: -0.018em;
+}
+.lead,
+.section-sub,
+.cta-text {
+  text-wrap: pretty;
+}
+
+/* Entrada de la página (una vez): escalonado de 70 ms */
+.rise {
+  animation: rise 520ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Aparece al hacer scroll (una vez). Solo oculto si hay JS */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 520ms var(--ease-out), transform 520ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+.grid > .reveal {
+  display: flex;
+}
+.grid > .reveal > .project {
+  flex: 1;
+}
+
+/* Overlay del play: se desvanece al empezar (salida rápida) */
+.stage-overlay {
+  transition: opacity 220ms var(--ease-out), visibility 0s linear 0s;
+}
+.stage-overlay.gone {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 220ms var(--ease-out), visibility 0s linear 220ms;
+}
+
+/* Botones: feedback inmediato al presionar */
+.play,
+.btn {
+  transition: background 160ms ease, transform 160ms var(--ease-out);
+}
+.skip {
+  transition: transform 160ms var(--ease-out), background 160ms ease;
+  animation: fade-in 220ms var(--ease-out) 300ms both;
+}
+.skip:active {
+  transform: scale(0.97);
+}
+
+/* Anillo suave que llama la atención al play (2 pulsos y se detiene) */
+.play {
+  position: relative;
+}
+.play::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  animation: ring 1.9s var(--ease-out) 1s 2;
+}
+@keyframes ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.1, 1.5);
+    opacity: 0;
+  }
+}
+
+/* Tu cara: nace desde su esquina (origen = abajo a la derecha) */
+.pip,
+.solo.intro {
+  transform-origin: bottom right;
+  animation: pip-in 300ms var(--ease-out);
+}
+@keyframes pip-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Del círculo a pantalla completa: se "materializa" (el desenfoque une los dos estados) */
+.solo.main {
+  animation: materialize 300ms var(--ease-out);
+}
+@keyframes materialize {
+  from {
+    opacity: 0.4;
+    filter: blur(3px);
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+/* Tarjetas de proyectos: elevación sutil (solo con mouse real) */
+.project {
+  transition: transform 240ms var(--ease-out), border-color 240ms ease;
+}
+.work-thumb {
+  transition: transform 500ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .project:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  }
+  .project:hover .work-thumb {
+    transform: scale(1.03);
+  }
+}
+
+/* ---------- accesibilidad ---------- */
+@media (prefers-reduced-motion: reduce) {
+  /* menos movimiento, no cero: se mantienen los fundidos que ayudan a entender */
+  .rise {
+    animation: fade-in 300ms ease both;
+    animation-delay: 0ms;
+  }
+  .js .reveal {
+    transform: none;
+    transition: opacity 300ms ease;
+    transition-delay: 0ms;
+  }
+  .pip,
+  .solo.intro,
+  .solo.main {
+    animation: fade-in 200ms ease;
+  }
+  .play::after {
+    animation: none;
+  }
+  .project:hover,
+  .project:hover .work-thumb {
+    transform: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .bar {
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
