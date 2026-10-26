@@ -1,0 +1,11 @@
+Pon aquí capturas reales de tus proyectos, con estos nombres exactos (.jpg):
+
+whatsapp-booking.jpg
+instagram-crm.jpg
+rag-chatbot.jpg
+booking-platform.jpg
+event-registration.jpg
+synco-tower.jpg
+
+Tamaño ideal: 1600x1000 px. Tapa teléfonos, nombres de pacientes y claves antes de capturar.
+Si falta un archivo, la página muestra un bloque verde con el nombre de la tecnología.

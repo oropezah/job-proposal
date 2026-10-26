@@ -1,7 +1,8 @@
 import type { Pitch } from "@/lib/pitch";
 
 /**
- * Tarjeta con el texto real del job del cliente. Diseño propio: no imita la interfaz de Upwork.
+ * Tarjeta con el texto real del job del cliente, con un look limpio de marketplace.
+ * Es diseño propio: sin logos ni marcas de Upwork.
  * Si el pitch trae card_image_url (una captura auténtica que subiste tú), se muestra esa imagen.
  */
 export default function JobCard({ pitch }: { pitch: Pitch }) {
@@ -17,16 +18,23 @@ export default function JobCard({ pitch }: { pitch: Pitch }) {
       <p className="jobcard-label">Your job post</p>
       <h2 className="jobcard-title">{pitch.job_title}</h2>
       <p className="jobcard-summary">{pitch.job_summary}</p>
-      {skills.length > 0 && (
-        <ul className="chips" aria-label="Skills requested">
-          {skills.slice(0, 8).map((s) => (
-            <li key={s} className="chip">
-              {s}
-            </li>
-          ))}
-        </ul>
+      {pitch.job_budget && (
+        <p className="jobcard-budget">
+          <span className="jobcard-k">Budget</span> {pitch.job_budget}
+        </p>
       )}
-      {pitch.job_budget && <p className="jobcard-budget">{pitch.job_budget}</p>}
+      {skills.length > 0 && (
+        <>
+          <p className="jobcard-k jobcard-skills-h">Skills and expertise</p>
+          <ul className="chips" aria-label="Skills requested">
+            {skills.slice(0, 8).map((s) => (
+              <li key={s} className="chip">
+                {s}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </article>
   );
 }
